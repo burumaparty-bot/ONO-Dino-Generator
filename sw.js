@@ -1,4 +1,4 @@
-const CACHE="ono-dino-generator-v8-0-0";
+const CACHE="ono-dino-generator-v8-2-0";
 const ASSETS=[
   "./",
   "./index.html",
@@ -6,16 +6,36 @@ const ASSETS=[
   "./icon.svg",
   "./README.md",
   "./CHANGELOG.md",
+  "./cards/D001.png",
   "./cards/D001.jpg",
+  "./cards/D001.json",
+  "./cards/D002.png",
   "./cards/D002.jpg",
+  "./cards/D002.json",
+  "./cards/D003.png",
   "./cards/D003.jpg",
+  "./cards/D003.json",
+  "./cards/D004.png",
   "./cards/D004.jpg",
+  "./cards/D004.json",
+  "./cards/D005.png",
   "./cards/D005.jpg",
+  "./cards/D005.json",
+  "./cards/D006.png",
   "./cards/D006.jpg",
+  "./cards/D006.json",
+  "./cards/D007.png",
   "./cards/D007.jpg",
+  "./cards/D007.json",
+  "./cards/D008.png",
   "./cards/D008.jpg",
+  "./cards/D008.json",
+  "./cards/D009.png",
   "./cards/D009.jpg",
-  "./cards/D010.jpg"
+  "./cards/D009.json",
+  "./cards/D010.png",
+  "./cards/D010.jpg",
+  "./cards/D010.json"
 ];
 self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)))});
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

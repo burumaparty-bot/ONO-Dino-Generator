@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>ONO Dino Generator Ver 8.0.0</title>
+<title>ONO Dino Generator Ver 8.2.0</title>
 <style>
 :root{--bg:#07111f;--panel:#111827;--text:#f8fafc;--muted:#94a3b8;--gold:#facc15;--red:#ef4444;--green:#22c55e;--blue:#38bdf8}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#12345c 0,#07111f 38%,#04070d 100%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -195,9 +195,77 @@ details summary{cursor:pointer;font-weight:900}.dexList{display:grid;grid-templa
 }
 </style>
 
+
+<style id="ver820-material-card">
+.dino-card{
+  position:relative;
+  width:172px;
+  height:172px;
+  margin:0 auto;
+  border-radius:24px;
+  overflow:hidden;
+  background:#020617;
+  border:2px solid rgba(250,204,21,.55);
+  box-shadow:0 16px 36px rgba(0,0,0,.55),0 0 24px rgba(250,204,21,.20);
+  animation:cardPop .65s ease-out;
+}
+.dino-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.dino-card-badge{
+  position:absolute;
+  top:8px;
+  right:8px;
+  padding:3px 8px;
+  border-radius:999px;
+  background:#facc15;
+  color:#111827;
+  font-size:11px;
+  font-weight:900;
+}
+.dino-card-info{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  padding:18px 8px 8px;
+  background:linear-gradient(180deg,rgba(2,6,23,0),rgba(2,6,23,.92));
+  text-align:center;
+}
+.dino-card-name{
+  font-size:17px;
+  font-weight:1000;
+  color:#f8fafc;
+}
+.dino-card-attr{
+  font-size:11px;
+  font-weight:800;
+  color:#facc15;
+}
+.dino-card.small{
+  width:50px;
+  height:50px;
+  border-radius:10px;
+  border-width:1px;
+  box-shadow:none;
+}
+.dino-card.small .dino-card-badge,
+.dino-card.small .dino-card-info{
+  display:none;
+}
+.rarity-N{border-color:#94a3b8;}
+.rarity-R{border-color:#22c55e;box-shadow:0 0 18px rgba(34,197,94,.24);}
+.rarity-SR{border-color:#38bdf8;box-shadow:0 0 22px rgba(56,189,248,.30);}
+.rarity-SSR{border-color:#a855f7;box-shadow:0 0 26px rgba(168,85,247,.36);}
+.rarity-LEGEND{border-color:#facc15;box-shadow:0 0 34px rgba(250,204,21,.56);}
+</style>
+
 </head>
 <body>
-<div class="version-badge" id="versionBadge">Ver 8.0.0</div>
+<div class="version-badge" id="versionBadge">Ver 8.2.0</div>
 
 
 
@@ -255,7 +323,8 @@ let energy=0, combo=0, hatchCount=Number(localStorage.getItem("ono_hatchCount_ge
 let totalEnergy=Number(localStorage.getItem("ono_totalEnergy_gen")||0);
 let unlocked=JSON.parse(localStorage.getItem("ono_unlocked_gen")||"{}");
 
-const DINO_IMAGES={"D001": "cards/D001.jpg", "D002": "cards/D002.jpg", "D003": "cards/D003.jpg", "D004": "cards/D004.jpg", "D005": "cards/D005.jpg", "D006": "cards/D006.jpg", "D007": "cards/D007.jpg", "D008": "cards/D008.jpg", "D009": "cards/D009.jpg", "D010": "cards/D010.jpg"};
+const DINO_IMAGES={"D001": "cards/D001.png", "D002": "cards/D002.png", "D003": "cards/D003.png", "D004": "cards/D004.png", "D005": "cards/D005.png", "D006": "cards/D006.png", "D007": "cards/D007.png", "D008": "cards/D008.png", "D009": "cards/D009.png", "D010": "cards/D010.png"};
+const DINO_META={"D001": {"id": "D001", "name": "ギガレックス", "rarity": "LEGEND", "attribute": "電気", "icon": "⚡", "description": "雷をまとった最強の復元恐竜。研究所の送電エネルギーに最も強く反応する。"}, "D002": {"id": "D002", "name": "メカラプター", "rarity": "SSR", "attribute": "ロボット", "icon": "🤖", "description": "機械部品のような外骨格を持つ高速型。解析AIとの相性が高い。"}, "D003": {"id": "D003", "name": "スピノアクア", "rarity": "SR", "attribute": "水・熱", "icon": "🌊", "description": "水辺の環境に適応した大型恐竜。熱と流体の変化を読む能力を持つ。"}, "D004": {"id": "D004", "name": "プテラウィング", "rarity": "SR", "attribute": "風・振動", "icon": "🌪", "description": "空中を滑るように飛ぶ翼竜。微小な振動を翼で感じ取る。"}, "D005": {"id": "D005", "name": "ブラキオスター", "rarity": "SR", "attribute": "大地", "icon": "🌍", "description": "巨大な体で研究所を守る温厚な恐竜。低周波の変化に敏感。"}, "D006": {"id": "D006", "name": "アンキロタンク", "rarity": "R", "attribute": "防御", "icon": "🛡", "description": "重装甲の守備型恐竜。衝撃や負荷に強い。"}, "D007": {"id": "D007", "name": "ステゴボルト", "rarity": "R", "attribute": "電気・自然", "icon": "🌿", "description": "背中のプレートに電気を蓄える恐竜。送電時に緑色に発光する。"}, "D008": {"id": "D008", "name": "ラプトルン", "rarity": "R", "attribute": "速度", "icon": "💨", "description": "軽量で俊敏な小型ハンター。回転変化への反応が早い。"}, "D009": {"id": "D009", "name": "トリケラン", "rarity": "N", "attribute": "岩", "icon": "⛰", "description": "三本角を持つ安定型。初めて復元されることが多い基本恐竜。"}, "D010": {"id": "D010", "name": "パラサウルス", "rarity": "N", "attribute": "森", "icon": "🌿", "description": "森にすむ穏やかな恐竜。研究所の環境維持を助ける。"}};
 const monsters=[["D001","D001","ギガレックス","LEGEND",0],["D002","D002","メカラプター","SSR",0],["D003","D003","スピノアクア","SR",0],["D004","D004","プテラウィング","SR",0],["D005","D005","ブラキオスター","SR",0],["D006","D006","アンキロタンク","R",0],["D007","D007","ステゴボルト","R",0],["D008","D008","ラプトルン","R",0],["D009","D009","トリケラン","N",0],["D010","D010","パラサウルス","N",0]].map(a=>({id:a[0],icon:a[1],name:a[2],rarity:a[3],min:a[4]}));
 const rarityColor={N:"#64748b",R:"#38bdf8",SR:"#a78bfa",SSR:"#fb923c",LEGEND:"#facc15"};
 const defaults={yellowMin:80,blackMax:105,searchRadius:40,innerRate:16,fitWindow:260,maxValid:1800,minBlob:10}, settings={...defaults};
@@ -447,6 +516,22 @@ function saveGame(){
  localStorage.setItem("ono_totalEnergy_gen",Math.floor(totalEnergy));
  localStorage.setItem("ono_unlocked_gen",JSON.stringify(unlocked));
 }
+
+function renderDinoCard(m, small=false){
+ const meta=DINO_META[m.id]||{};
+ const attr=meta.attribute||"未知";
+ const icon=meta.icon||"";
+ const cls=small?"dino-card small":"dino-card";
+ return `<div class="${cls} rarity-${m.rarity}">
+   <img src="${DINO_IMAGES[m.id]}" alt="${m.name}" onerror="this.src='cards/${m.id}.jpg'">
+   <div class="dino-card-badge">${m.rarity}</div>
+   <div class="dino-card-info">
+     <div class="dino-card-name">${m.name}</div>
+     <div class="dino-card-attr">${icon} ${attr}</div>
+   </div>
+ </div>`;
+}
+
 function foundCount(){return Object.keys(unlocked).length;}
 function updateGameUI(){
  $("energy").textContent=Math.floor(energy);
@@ -476,7 +561,7 @@ function hatch(){
  unlocked[m.id]=true;
  hatchCount++;
  saveGame();
- $("egg").innerHTML=`<img class="dino-img" src="${DINO_IMAGES[m.id]}" alt="${m.name}">`;
+ $("egg").innerHTML=renderDinoCard(m);
  $("egg").className="egg hatch"+(m.rarity==="LEGEND"?" legend":"");
  $("monsterName").textContent=m.name+" 復元成功！";
  $("rarity").textContent=m.rarity;
@@ -497,7 +582,7 @@ function hatch(){
  const labLv=Math.floor(totalEnergy/1000)+1;
  const c=comments[Math.floor(Math.random()*comments.length)];
  $("status").textContent=`送電量 ${Math.floor(energy)} Energy / 累計 ${Math.floor(totalEnergy)} Energy / 研究所Lv${labLv}。${c}`;
- flash((m.rarity==="LEGEND"?"LEGEND<br>":"GET!<br>")+`<img class="dino-img" src="${DINO_IMAGES[m.id]}" alt="${m.name}">`);
+ flash((m.rarity==="LEGEND"?"LEGEND<br>":"GET!<br>")+renderDinoCard(m));
  beep(m.rarity==="LEGEND"?"legend":"hatch");
  vibrate(m.rarity==="LEGEND"?[100,60,100,60,220]:[60,40,90]);
  updateGameUI();
@@ -566,7 +651,7 @@ function newEgg(){
 }
 $("newEggBtn").onclick=newEgg;
 $("resetGameBtn").onclick=()=>{energy=0;combo=0;hatchCount=0;unlocked={};maxRpm=0;saveGame();newEgg();$("maxRpm").textContent="0";};
-function renderDex(){const root=$("dexList");root.innerHTML="";for(const m of monsters){const d=document.createElement("div");d.className="dexItem"+(unlocked[m.id]?"":" locked");d.innerHTML=`<div class="icon">${unlocked[m.id]?`<img src="${DINO_IMAGES[m.id]}" alt="${m.name}">`:"❔"}</div><div class="n">${m.id} ${unlocked[m.id]?m.name:"未発見"}</div><div class="r">${m.rarity}</div>`;root.appendChild(d);}}
+function renderDex(){const root=$("dexList");root.innerHTML="";for(const m of monsters){const d=document.createElement("div");d.className="dexItem"+(unlocked[m.id]?"":" locked");d.innerHTML=`<div class="icon">${unlocked[m.id]?renderDinoCard(m,true):"❔"}</div><div class="n">${m.id} ${unlocked[m.id]?m.name:"未発見"}</div><div class="r">${m.rarity}</div>`;root.appendChild(d);}}
 
 function loop(now){
  resize();
@@ -638,8 +723,8 @@ updateGameUI();renderDex();
 
 
 <script id="app-version">
-window.ONO_APP_VERSION="8.0.0";
-window.ONO_APP_BUILD="2026-06-30 01:05";
+window.ONO_APP_VERSION="8.2.0";
+window.ONO_APP_BUILD="2026-06-30 01:30";
 window.ONO_MEASUREMENT_ENGINE="FpsDiagnostic";
 console.log("ONO Dino Generator", window.ONO_APP_VERSION, window.ONO_APP_BUILD, window.ONO_MEASUREMENT_ENGINE);
 </script>
