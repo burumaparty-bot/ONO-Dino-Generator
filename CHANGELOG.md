@@ -1,18 +1,14 @@
 # CHANGELOG
 
-## Ver 6.0.0 - 2026-06-29 23:30
+## Ver 6.1.0 - 2026-06-29 23:55
 
 ### Added
-- 画面右上にバージョン表示を追加
-- Build日時表示を追加
-- Measurement Engine表示を追加
-- GitHub Pages向けREADMEを整理
-- Service Workerに旧キャッシュ削除処理を追加
+- 恐竜画像10種類を追加
+- 復元成功時に画像カードを表示
+- 図鑑に画像サムネイルを表示
+- バージョン表示を `Ver 6.1.0` のみに簡素化
 
 ### Kept
-- 計測エンジンは FpsDiagnostic のまま
-- カメラ表示サイズ、canvas、reticle、計測ロジックは変更なし
-
-### Rule
-- 今後、計測エンジンは原則変更しない
-- UI、ゲーム、演出、恐竜図鑑のみ改良する
+- Measurement Engine: FpsDiagnostic
+- 計測ロジック変更なし
+- カメラ、canvas、reticle変更なし
