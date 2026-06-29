@@ -1,14 +1,14 @@
-# ONO Dino Generator Ver 7.1.0
+# ONO Dino Generator Ver 8.0.0
 
 小野測器 恐竜発電研究所
 
-## 追加内容
+## 変更点
 
-- 生成されたゲームUI画像から10種類の恐竜カードを切り出し
-- 実画像JPEGをBase64としてアプリに直接埋め込み
-- 復元成功時も図鑑も本物のカード画像で表示
-- 送電開始ボタンを上部配置
-- バージョン表示は `Ver 7.1.0`
+- Base64画像埋め込みを廃止
+- `cards/D001.jpg`〜`cards/D010.jpg` を直接読み込む方式に変更
+- 今後は `cards` フォルダ内の画像を差し替えるだけで恐竜画像を変更可能
+- 送電開始ボタンは上部配置
+- バージョン表示は `Ver 8.0.0`
 - 計測エンジンは変更していません
 
 ## Measurement Engine
@@ -16,22 +16,48 @@
 - FpsDiagnostic
 - カメラ、canvas、reticle、計測ロジックは変更なし
 
-## 恐竜10種類
+## フォルダ構成
 
-1. ギガレックス
-2. メカラプター
-3. スピノアクア
-4. プテラウィング
-5. ブラキオスター
-6. アンキロタンク
-7. ステゴボルト
-8. ラプトルン
-9. トリケラン
-10. パラサウルス
+```text
+ONO-Dino-Generator/
+├── index.html
+├── manifest.webmanifest
+├── sw.js
+├── icon.svg
+├── README.md
+├── CHANGELOG.md
+├── cards/
+│   ├── D001.jpg
+│   ├── D002.jpg
+│   ├── D003.jpg
+│   ├── D004.jpg
+│   ├── D005.jpg
+│   ├── D006.jpg
+│   ├── D007.jpg
+│   ├── D008.jpg
+│   ├── D009.jpg
+│   └── D010.jpg
+├── css/
+└── js/
+```
 
-## GitHub Pages
+## 画像差し替え方法
 
-以下を上書きアップロードしてください。
+`cards` フォルダ内の画像を同じファイル名で上書きしてください。
+
+例：
+
+```text
+cards/D001.jpg
+```
+
+を差し替えると、ギガレックスの画像が変わります。
+
+## GitHub Pages更新方法
+
+ZIPを解凍し、中身をGitHubリポジトリへ上書きアップロードしてください。
+
+アップロード対象：
 
 - index.html
 - manifest.webmanifest
@@ -39,3 +65,6 @@
 - icon.svg
 - README.md
 - CHANGELOG.md
+- cardsフォルダ
+- cssフォルダ
+- jsフォルダ
