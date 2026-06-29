@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>ONO Dino Generator Ver 8.2.0</title>
+<title>ONO Dino Generator Ver 8.3.0</title>
 <style>
 :root{--bg:#07111f;--panel:#111827;--text:#f8fafc;--muted:#94a3b8;--gold:#facc15;--red:#ef4444;--green:#22c55e;--blue:#38bdf8}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#12345c 0,#07111f 38%,#04070d 100%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -263,9 +263,66 @@ details summary{cursor:pointer;font-weight:900}.dexList{display:grid;grid-templa
 .rarity-LEGEND{border-color:#facc15;box-shadow:0 0 34px rgba(250,204,21,.56);}
 </style>
 
+
+<style id="ver830-revival-effects">
+.revival-steps{
+  margin-top:10px;
+  display:grid;
+  gap:6px;
+}
+.revival-step{
+  padding:7px 10px;
+  border-radius:12px;
+  background:rgba(15,23,42,.72);
+  border:1px solid rgba(148,163,184,.22);
+  color:#94a3b8;
+  font-size:12px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.revival-step.active{
+  color:#facc15;
+  border-color:rgba(250,204,21,.70);
+  box-shadow:0 0 18px rgba(250,204,21,.25);
+  animation:pulseLab .55s ease-in-out infinite alternate;
+}
+.revival-step.done{
+  color:#22c55e;
+  border-color:rgba(34,197,94,.55);
+}
+.revival-meter{
+  margin-top:9px;
+  height:14px;
+  border-radius:999px;
+  background:#020617;
+  overflow:hidden;
+  border:1px solid rgba(148,163,184,.25);
+}
+.revival-meter-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#22d3ee,#facc15,#f97316);
+  transition:width .35s ease;
+}
+@keyframes pulseLab{
+  from{transform:scale(1);filter:brightness(1)}
+  to{transform:scale(1.015);filter:brightness(1.35)}
+}
+.energy-surge{
+  animation:surgeFlash .35s ease-in-out 4;
+}
+@keyframes surgeFlash{
+  0%{box-shadow:0 0 0 rgba(250,204,21,0)}
+  50%{box-shadow:0 0 42px rgba(250,204,21,.72)}
+  100%{box-shadow:0 0 0 rgba(250,204,21,0)}
+}
+</style>
+
 </head>
 <body>
-<div class="version-badge" id="versionBadge">Ver 8.2.0</div>
+<div class="version-badge" id="versionBadge">Ver 8.3.0</div>
 
 
 
@@ -556,6 +613,50 @@ function chooseMonster(){
 function flash(text){const f=$("flash");f.innerHTML=text;f.classList.remove("show");void f.offsetWidth;f.classList.add("show");setTimeout(()=>f.classList.remove("show"),700);}
 function beep(type="hatch"){try{const ac=new (window.AudioContext||window.webkitAudioContext)();const seq=type==="legend"?[523,659,784,1046]:[392,523,659];seq.forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;o.type="triangle";g.gain.setValueAtTime(.0001,ac.currentTime+i*.07);g.gain.exponentialRampToValueAtTime(.08,ac.currentTime+i*.07+.02);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+i*.07+.13);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime+i*.07);o.stop(ac.currentTime+i*.07+.14);});}catch(e){}}
 function vibrate(pattern){if(navigator.vibrate)navigator.vibrate(pattern);}
+
+const REVIVAL_STEPS=[
+  ["🧬","DNA解析"],
+  ["🧫","細胞生成"],
+  ["🦴","骨格生成"],
+  ["💪","筋肉生成"],
+  ["🧪","皮膚形成"],
+  ["⚡","生命反応確認"]
+];
+
+function showRevivalStep(index){
+ const html=`
+  <div class="revival-meter"><div class="revival-meter-fill" style="width:${Math.round((index/REVIVAL_STEPS.length)*100)}%"></div></div>
+  <div class="revival-steps">
+   ${REVIVAL_STEPS.map((s,i)=>`
+    <div class="revival-step ${i<index?"done":i===index?"active":""}">
+      <span>${s[0]} ${s[1]}</span><span>${i<index?"完了":i===index?"解析中":"待機"}</span>
+    </div>`).join("")}
+  </div>`;
+ $("egg").innerHTML=html;
+ $("egg").className="egg energy-surge";
+ $("monsterName").textContent=index<REVIVAL_STEPS.length?REVIVAL_STEPS[index][1]+"中…":"復元完了";
+ $("rarity").textContent="復元シーケンス";
+ $("rarity").style.background="#38bdf8";
+ $("rarity").style.color="#06101a";
+}
+
+function runRevivalSequence(done){
+ let i=0;
+ showRevivalStep(0);
+ const timer=setInterval(()=>{
+   i++;
+   if(i<REVIVAL_STEPS.length){
+     showRevivalStep(i);
+     beep("start");
+     vibrate([20]);
+   }else{
+     clearInterval(timer);
+     $("egg").innerHTML=`<div class="revival-meter"><div class="revival-meter-fill" style="width:100%"></div></div><div class="revival-steps"><div class="revival-step done"><span>✅ 復元シーケンス完了</span><span>成功</span></div></div>`;
+     setTimeout(done,450);
+   }
+ },520);
+}
+
 function hatch(){
  const m=chooseMonster();
  unlocked[m.id]=true;
@@ -633,7 +734,7 @@ function finishTransmission(){
  $("rarity").style.background="#facc15";
  $("rarity").style.color="#111827";
  $("status").textContent=`送電完了。今回の送電量 ${Math.floor(energy)} Energy。恐竜DNAを解析します…`;
- setTimeout(()=>hatch(),900);
+ setTimeout(()=>runRevivalSequence(()=>hatch()),420);
 }
 function newEgg(){
  $("egg").textContent="⚡";
@@ -723,8 +824,8 @@ updateGameUI();renderDex();
 
 
 <script id="app-version">
-window.ONO_APP_VERSION="8.2.0";
-window.ONO_APP_BUILD="2026-06-30 01:30";
+window.ONO_APP_VERSION="8.3.0";
+window.ONO_APP_BUILD="2026-06-30 01:50";
 window.ONO_MEASUREMENT_ENGINE="FpsDiagnostic";
 console.log("ONO Dino Generator", window.ONO_APP_VERSION, window.ONO_APP_BUILD, window.ONO_MEASUREMENT_ENGINE);
 </script>

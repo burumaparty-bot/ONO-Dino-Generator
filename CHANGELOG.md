@@ -1,13 +1,13 @@
 # CHANGELOG
 
-## Ver 8.2.0 - 2026-06-30 01:30
+## Ver 8.3.0 - 2026-06-30 01:50
 
 ### Added
-- PNG画像読込方式を正式採用
-- cards/D001.json ～ D010.json を追加
-- ゲーム側カード枠・レア度・属性表示を追加
-- JPG fallback維持
+- DNA復元シーケンス演出を追加
+- 進行ゲージとステップ表示を追加
+- 復元完了後に恐竜カード出現
 
 ### Kept
 - Measurement Engine: FpsDiagnostic
+- cards/png/json構成
 - 計測ロジック変更なし
