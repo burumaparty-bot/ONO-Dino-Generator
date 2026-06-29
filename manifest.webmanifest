@@ -1,6 +1,6 @@
 {
-  "name": "ONO Dino Generator Measurement Restore",
-  "short_name": "ONO Measure",
+  "name": "小野測器 DINO GENERATOR Ver 6.0.0",
+  "short_name": "DinoGen",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
