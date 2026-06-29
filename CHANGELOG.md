@@ -1,13 +1,15 @@
 # CHANGELOG
 
-## Ver 8.3.0 - 2026-06-30 01:50
+## Ver 10.0.0 - 2026-06-30 03:10
 
 ### Added
-- DNA復元シーケンス演出を追加
-- 進行ゲージとステップ表示を追加
-- 復元完了後に恐竜カード出現
+- soundsフォルダ
+- 音ON/OFFボタン
+- BGM/効果音フレームワーク
+- css/jsフォルダ
 
 ### Kept
+- cardsフォルダ
+- PNG画像読込
+- DNA復元演出
 - Measurement Engine: FpsDiagnostic
-- cards/png/json構成
-- 計測ロジック変更なし

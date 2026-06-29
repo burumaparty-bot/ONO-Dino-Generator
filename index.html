@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <link rel="manifest" href="manifest.webmanifest">
-<title>ONO Dino Generator Ver 8.3.0</title>
+<title>ONO Dino Generator Ver 10.0.0</title>
 <style>
 :root{--bg:#07111f;--panel:#111827;--text:#f8fafc;--muted:#94a3b8;--gold:#facc15;--red:#ef4444;--green:#22c55e;--blue:#38bdf8}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#12345c 0,#07111f 38%,#04070d 100%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -264,65 +264,15 @@ details summary{cursor:pointer;font-weight:900}.dexList{display:grid;grid-templa
 </style>
 
 
-<style id="ver830-revival-effects">
-.revival-steps{
-  margin-top:10px;
-  display:grid;
-  gap:6px;
-}
-.revival-step{
-  padding:7px 10px;
-  border-radius:12px;
-  background:rgba(15,23,42,.72);
-  border:1px solid rgba(148,163,184,.22);
-  color:#94a3b8;
-  font-size:12px;
-  font-weight:800;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.revival-step.active{
-  color:#facc15;
-  border-color:rgba(250,204,21,.70);
-  box-shadow:0 0 18px rgba(250,204,21,.25);
-  animation:pulseLab .55s ease-in-out infinite alternate;
-}
-.revival-step.done{
-  color:#22c55e;
-  border-color:rgba(34,197,94,.55);
-}
-.revival-meter{
-  margin-top:9px;
-  height:14px;
-  border-radius:999px;
-  background:#020617;
-  overflow:hidden;
-  border:1px solid rgba(148,163,184,.25);
-}
-.revival-meter-fill{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#22d3ee,#facc15,#f97316);
-  transition:width .35s ease;
-}
-@keyframes pulseLab{
-  from{transform:scale(1);filter:brightness(1)}
-  to{transform:scale(1.015);filter:brightness(1.35)}
-}
-.energy-surge{
-  animation:surgeFlash .35s ease-in-out 4;
-}
-@keyframes surgeFlash{
-  0%{box-shadow:0 0 0 rgba(250,204,21,0)}
-  50%{box-shadow:0 0 42px rgba(250,204,21,.72)}
-  100%{box-shadow:0 0 0 rgba(250,204,21,0)}
-}
+<style id="ver10-sound-ui">
+.sound-toggle{position:fixed;left:6px;top:6px;z-index:9999;border-radius:999px;border:1px solid rgba(148,163,184,.35);background:rgba(2,6,23,.72);color:#e2e8f0;font-size:12px;font-weight:900;padding:6px 10px;box-shadow:0 8px 18px rgba(0,0,0,.25)}
+.sound-toggle.on{color:#facc15;border-color:rgba(250,204,21,.55)}
 </style>
 
 </head>
 <body>
-<div class="version-badge" id="versionBadge">Ver 8.3.0</div>
+<button id="soundToggle" class="sound-toggle">🔇 音OFF</button>
+<div class="version-badge" id="versionBadge">Ver 10.0.0</div>
 
 
 
@@ -383,6 +333,38 @@ let unlocked=JSON.parse(localStorage.getItem("ono_unlocked_gen")||"{}");
 const DINO_IMAGES={"D001": "cards/D001.png", "D002": "cards/D002.png", "D003": "cards/D003.png", "D004": "cards/D004.png", "D005": "cards/D005.png", "D006": "cards/D006.png", "D007": "cards/D007.png", "D008": "cards/D008.png", "D009": "cards/D009.png", "D010": "cards/D010.png"};
 const DINO_META={"D001": {"id": "D001", "name": "ギガレックス", "rarity": "LEGEND", "attribute": "電気", "icon": "⚡", "description": "雷をまとった最強の復元恐竜。研究所の送電エネルギーに最も強く反応する。"}, "D002": {"id": "D002", "name": "メカラプター", "rarity": "SSR", "attribute": "ロボット", "icon": "🤖", "description": "機械部品のような外骨格を持つ高速型。解析AIとの相性が高い。"}, "D003": {"id": "D003", "name": "スピノアクア", "rarity": "SR", "attribute": "水・熱", "icon": "🌊", "description": "水辺の環境に適応した大型恐竜。熱と流体の変化を読む能力を持つ。"}, "D004": {"id": "D004", "name": "プテラウィング", "rarity": "SR", "attribute": "風・振動", "icon": "🌪", "description": "空中を滑るように飛ぶ翼竜。微小な振動を翼で感じ取る。"}, "D005": {"id": "D005", "name": "ブラキオスター", "rarity": "SR", "attribute": "大地", "icon": "🌍", "description": "巨大な体で研究所を守る温厚な恐竜。低周波の変化に敏感。"}, "D006": {"id": "D006", "name": "アンキロタンク", "rarity": "R", "attribute": "防御", "icon": "🛡", "description": "重装甲の守備型恐竜。衝撃や負荷に強い。"}, "D007": {"id": "D007", "name": "ステゴボルト", "rarity": "R", "attribute": "電気・自然", "icon": "🌿", "description": "背中のプレートに電気を蓄える恐竜。送電時に緑色に発光する。"}, "D008": {"id": "D008", "name": "ラプトルン", "rarity": "R", "attribute": "速度", "icon": "💨", "description": "軽量で俊敏な小型ハンター。回転変化への反応が早い。"}, "D009": {"id": "D009", "name": "トリケラン", "rarity": "N", "attribute": "岩", "icon": "⛰", "description": "三本角を持つ安定型。初めて復元されることが多い基本恐竜。"}, "D010": {"id": "D010", "name": "パラサウルス", "rarity": "N", "attribute": "森", "icon": "🌿", "description": "森にすむ穏やかな恐竜。研究所の環境維持を助ける。"}};
 const monsters=[["D001","D001","ギガレックス","LEGEND",0],["D002","D002","メカラプター","SSR",0],["D003","D003","スピノアクア","SR",0],["D004","D004","プテラウィング","SR",0],["D005","D005","ブラキオスター","SR",0],["D006","D006","アンキロタンク","R",0],["D007","D007","ステゴボルト","R",0],["D008","D008","ラプトルン","R",0],["D009","D009","トリケラン","N",0],["D010","D010","パラサウルス","N",0]].map(a=>({id:a[0],icon:a[1],name:a[2],rarity:a[3],min:a[4]}));
+
+const SOUND_PATHS={bgm:"sounds/bgm.mp3",button:"sounds/button.mp3",send:"sounds/send.mp3",charging:"sounds/charging.mp3",dna:"sounds/dna.mp3",success:"sounds/success.mp3",legend:"sounds/legend.mp3",complete:"sounds/complete.mp3"};
+let soundEnabled=localStorage.getItem("ono_sound_enabled")==="1";
+let soundFiles={};
+function initSoundFiles(){
+ for(const [k,path] of Object.entries(SOUND_PATHS)){
+  const a=new Audio(path);a.preload="auto";a.loop=(k==="bgm"||k==="charging");a.volume=(k==="bgm")?.28:(k==="charging"?.35:.75);a.addEventListener("error",()=>{});soundFiles[k]=a;
+ }
+}
+function setSoundEnabled(on){
+ soundEnabled=!!on;localStorage.setItem("ono_sound_enabled",soundEnabled?"1":"0");
+ const b=$("soundToggle");if(b){b.textContent=soundEnabled?"🔊 音ON":"🔇 音OFF";b.classList.toggle("on",soundEnabled);}
+ if(soundEnabled)playBgm();else stopAllSound();
+}
+function playSound(name){
+ if(!soundEnabled)return;const a=soundFiles[name];
+ if(a){try{a.currentTime=0;const p=a.play();if(p&&p.catch)p.catch(()=>fallbackBeep(name));return;}catch(e){}}
+ fallbackBeep(name);
+}
+function playLoop(name){
+ if(!soundEnabled)return;const a=soundFiles[name];
+ if(a){try{a.currentTime=0;a.loop=true;const p=a.play();if(p&&p.catch)p.catch(()=>fallbackBeep(name));return;}catch(e){}}
+}
+function stopLoop(name){const a=soundFiles[name];if(a){try{a.pause();a.currentTime=0;}catch(e){}}}
+function playBgm(){if(!soundEnabled)return;const a=soundFiles.bgm;if(a){try{a.loop=true;a.volume=.28;const p=a.play();if(p&&p.catch)p.catch(()=>{});}catch(e){}}}
+function stopAllSound(){for(const a of Object.values(soundFiles)){try{a.pause();a.currentTime=0;}catch(e){}}}
+function fallbackBeep(name){
+ try{const ac=new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator();const g=ac.createGain();o.connect(g);g.connect(ac.destination);
+ const m={button:[620,.05,.06],send:[220,.25,.18],charging:[110,.20,.06],dna:[880,.07,.07],success:[523,.16,.12],legend:[196,.45,.18],complete:[740,.10,.08],bgm:[140,.20,.03]};
+ const v=m[name]||[500,.08,.06];o.frequency.value=v[0];o.type=(name==="legend"||name==="charging")?"sawtooth":"sine";g.gain.value=v[2];o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+v[1]);o.stop(ac.currentTime+v[1]);}catch(e){}
+}
+
 const rarityColor={N:"#64748b",R:"#38bdf8",SR:"#a78bfa",SSR:"#fb923c",LEGEND:"#facc15"};
 const defaults={yellowMin:80,blackMax:105,searchRadius:40,innerRate:16,fitWindow:260,maxValid:1800,minBlob:10}, settings={...defaults};
 for(const k in settings){settings[k]=Number(localStorage.getItem("hsbw_"+k)??defaults[k]);const el=$(k);if(el)el.value=settings[k];}
@@ -580,7 +562,7 @@ function renderDinoCard(m, small=false){
  const icon=meta.icon||"";
  const cls=small?"dino-card small":"dino-card";
  return `<div class="${cls} rarity-${m.rarity}">
-   <img src="${DINO_IMAGES[m.id]}" alt="${m.name}" onerror="this.src='cards/${m.id}.jpg'">
+   <img src="${DINO_IMAGES[m.id]}" alt="${m.name}">
    <div class="dino-card-badge">${m.rarity}</div>
    <div class="dino-card-info">
      <div class="dino-card-name">${m.name}</div>
@@ -613,50 +595,6 @@ function chooseMonster(){
 function flash(text){const f=$("flash");f.innerHTML=text;f.classList.remove("show");void f.offsetWidth;f.classList.add("show");setTimeout(()=>f.classList.remove("show"),700);}
 function beep(type="hatch"){try{const ac=new (window.AudioContext||window.webkitAudioContext)();const seq=type==="legend"?[523,659,784,1046]:[392,523,659];seq.forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;o.type="triangle";g.gain.setValueAtTime(.0001,ac.currentTime+i*.07);g.gain.exponentialRampToValueAtTime(.08,ac.currentTime+i*.07+.02);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+i*.07+.13);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime+i*.07);o.stop(ac.currentTime+i*.07+.14);});}catch(e){}}
 function vibrate(pattern){if(navigator.vibrate)navigator.vibrate(pattern);}
-
-const REVIVAL_STEPS=[
-  ["🧬","DNA解析"],
-  ["🧫","細胞生成"],
-  ["🦴","骨格生成"],
-  ["💪","筋肉生成"],
-  ["🧪","皮膚形成"],
-  ["⚡","生命反応確認"]
-];
-
-function showRevivalStep(index){
- const html=`
-  <div class="revival-meter"><div class="revival-meter-fill" style="width:${Math.round((index/REVIVAL_STEPS.length)*100)}%"></div></div>
-  <div class="revival-steps">
-   ${REVIVAL_STEPS.map((s,i)=>`
-    <div class="revival-step ${i<index?"done":i===index?"active":""}">
-      <span>${s[0]} ${s[1]}</span><span>${i<index?"完了":i===index?"解析中":"待機"}</span>
-    </div>`).join("")}
-  </div>`;
- $("egg").innerHTML=html;
- $("egg").className="egg energy-surge";
- $("monsterName").textContent=index<REVIVAL_STEPS.length?REVIVAL_STEPS[index][1]+"中…":"復元完了";
- $("rarity").textContent="復元シーケンス";
- $("rarity").style.background="#38bdf8";
- $("rarity").style.color="#06101a";
-}
-
-function runRevivalSequence(done){
- let i=0;
- showRevivalStep(0);
- const timer=setInterval(()=>{
-   i++;
-   if(i<REVIVAL_STEPS.length){
-     showRevivalStep(i);
-     beep("start");
-     vibrate([20]);
-   }else{
-     clearInterval(timer);
-     $("egg").innerHTML=`<div class="revival-meter"><div class="revival-meter-fill" style="width:100%"></div></div><div class="revival-steps"><div class="revival-step done"><span>✅ 復元シーケンス完了</span><span>成功</span></div></div>`;
-     setTimeout(done,450);
-   }
- },520);
-}
-
 function hatch(){
  const m=chooseMonster();
  unlocked[m.id]=true;
@@ -684,7 +622,7 @@ function hatch(){
  const c=comments[Math.floor(Math.random()*comments.length)];
  $("status").textContent=`送電量 ${Math.floor(energy)} Energy / 累計 ${Math.floor(totalEnergy)} Energy / 研究所Lv${labLv}。${c}`;
  flash((m.rarity==="LEGEND"?"LEGEND<br>":"GET!<br>")+renderDinoCard(m));
- beep(m.rarity==="LEGEND"?"legend":"hatch");
+ beep(m.rarity==="LEGEND"?"legend":"hatch"); playSound(m.rarity==="LEGEND"?"legend":"success");
  vibrate(m.rarity==="LEGEND"?[100,60,100,60,220]:[60,40,90]);
  updateGameUI();
 }
@@ -733,8 +671,8 @@ function finishTransmission(){
  $("rarity").textContent="送電完了";
  $("rarity").style.background="#facc15";
  $("rarity").style.color="#111827";
- $("status").textContent=`送電完了。今回の送電量 ${Math.floor(energy)} Energy。恐竜DNAを解析します…`;
- setTimeout(()=>runRevivalSequence(()=>hatch()),420);
+ $("status").textContent=`送電完了。今回の送電量 ${Math.floor(energy)} Energy。恐竜DNAを解析します…`; stopLoop("charging"); playSound("dna");
+ setTimeout(()=>hatch(),900);
 }
 function newEgg(){
  $("egg").textContent="⚡";
@@ -750,7 +688,7 @@ function newEgg(){
  rpmFilterWindow=[];
  updateGameUI();
 }
-$("newEggBtn").onclick=newEgg;
+$("newEggBtn").onclick=()=>{playSound("button");newEgg();};
 $("resetGameBtn").onclick=()=>{energy=0;combo=0;hatchCount=0;unlocked={};maxRpm=0;saveGame();newEgg();$("maxRpm").textContent="0";};
 function renderDex(){const root=$("dexList");root.innerHTML="";for(const m of monsters){const d=document.createElement("div");d.className="dexItem"+(unlocked[m.id]?"":" locked");d.innerHTML=`<div class="icon">${unlocked[m.id]?renderDinoCard(m,true):"❔"}</div><div class="n">${m.id} ${unlocked[m.id]?m.name:"未発見"}</div><div class="r">${m.rarity}</div>`;root.appendChild(d);}}
 
@@ -813,19 +751,20 @@ $("startBtn").onclick=()=>{
  $("rarity").style.background="#38bdf8";
  $("rarity").style.color="#06101a";
  $("status").textContent="3秒間だけ研究所へ電力を供給します。恐竜は完全ランダムで復元されます。";
- beep("start");
+ beep("start"); playSound("button"); playSound("send"); playLoop("charging");
 };
 $("stopBtn").onclick=()=>{
  $("status").textContent=running ? "送電は3秒で自動終了します。" : "送電開始を押してください。";
 };
+initSoundFiles();setSoundEnabled(soundEnabled);if($("soundToggle"))$("soundToggle").onclick=()=>{setSoundEnabled(!soundEnabled);playSound("button");};
 updateGameUI();renderDex();
 </script>
 
 
 
 <script id="app-version">
-window.ONO_APP_VERSION="8.3.0";
-window.ONO_APP_BUILD="2026-06-30 01:50";
+window.ONO_APP_VERSION="10.0.0";
+window.ONO_APP_BUILD="2026-06-30 03:10";
 window.ONO_MEASUREMENT_ENGINE="FpsDiagnostic";
 console.log("ONO Dino Generator", window.ONO_APP_VERSION, window.ONO_APP_BUILD, window.ONO_MEASUREMENT_ENGINE);
 </script>
