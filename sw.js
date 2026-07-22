@@ -1,4 +1,4 @@
-const CACHE="ono-dino-generator-v10-0-0";
+const CACHE="ono-dino-generator-v10-1-2";
 const ASSETS=[
   "./",
   "./index.html",
