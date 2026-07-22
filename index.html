@@ -273,7 +273,7 @@ details summary{cursor:pointer;font-weight:900}.dexList{display:grid;grid-templa
 <style id="ver101-mobile-single-screen">
 /* 表示サイズと計測解像度を分離。Canvas内部は常に320x240で計測する。 */
 .camera{aspect-ratio:4/3;min-height:0}
-video,canvas#overlay{object-fit:fill}
+video,canvas#overlay{object-fit:cover}
 .mobile-game-screen{display:grid;grid-template-columns:1fr;gap:8px}
 .mobile-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .mobile-actions #startBtn{grid-column:1/-1;position:relative;top:auto}
@@ -792,7 +792,17 @@ function loop(now){
  const w=overlay.width,h=overlay.height;
  ctx.clearRect(0,0,w,h);
  if(video.readyState>=2){
-  ctx.drawImage(video,0,0,video.videoWidth||ANALYSIS_W,video.videoHeight||ANALYSIS_H,0,0,w,h);
+  const vw=video.videoWidth||ANALYSIS_W, vh=video.videoHeight||ANALYSIS_H;
+  const targetAspect=w/h, sourceAspect=vw/vh;
+  let sx=0, sy=0, sw=vw, sh=vh;
+  if(sourceAspect>targetAspect){
+   sw=vh*targetAspect;
+   sx=(vw-sw)/2;
+  }else{
+   sh=vw/targetAspect;
+   sy=(vh-sh)/2;
+  }
+  ctx.drawImage(video,sx,sy,sw,sh,0,0,w,h);
   const angle=detectBlackWeight(w,h);
   if(angle!==null && running)updateAngle(angle,now);
  }
